@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://openlayers.org/en/v4.2.0/css/ol.css" type="text/css">
+    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+    <script src="https://openlayers.org/en/v4.2.0/build/ol.js"></script>
+
+
+    <body>
+
+        <div class="container">        
+
+            <h2>Heatmap layer</h2>
+
+            <div id="map"></div>
+
+        </div>
+
+        <script id="code">
+            // Create a heatmap layer based on GeoJSON content
+            var heatmapLayer = new ol.layer.Heatmap({
+                weight: "mon_fri",
+                source: new ol.source.Vector({
+                    url: './mrwa-traffic-digest-3857.geojson',
+                    projection: 'EPSG:3857',
+                    format: new ol.format.GeoJSON()
+                }),
+                opacity: 0.9
+            });
+
+            // Create a tile layer from OSM
+            var osmLayer = new ol.layer.Tile({
+                source: new ol.source.OSM()
+            });
+
+            // Create the map with the previous layers
+            var map = new ol.Map({
+                target: 'map',  // The DOM element that will contains the map
+                renderer: 'canvas', // Force the renderer to be used
+                layers: [osmLayer, heatmapLayer],
+                // Create a view centered on the specified location and zoom level
+                    //center: ol.proj.transform([31.9505, 115.8601], 'EPSG:4326', 'EPSG:3857'),
+                view: new ol.View({
+                    center: ol.proj.transform([115.86, -31.95], 'EPSG:4326', 'EPSG:3857'),
+                    zoom: 13 
+                })
+            });
+        </script>
+
+</body>
